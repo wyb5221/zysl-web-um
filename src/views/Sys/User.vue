@@ -31,8 +31,8 @@
 			</el-form-item>
 		</el-form>
 		<!--表格显示列界面-->
-		<table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns" 
-			@handleFilterColumns="handleFilterColumns"> 
+		<table-column-filter-dialog ref="tableColumnFilterDialog" :columns="columns"
+			@handleFilterColumns="handleFilterColumns">
 		</table-column-filter-dialog>
 	</div>
 	<!--表格内容栏-->
@@ -47,18 +47,21 @@
 			<el-form-item label="ID" prop="id" v-if="false">
 				<el-input v-model="dataForm.id" :disabled="true" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="用户名" prop="name">
+			<el-form-item label="登陆名" prop="name">
 				<el-input v-model="dataForm.name" auto-complete="off"></el-input>
 			</el-form-item>
+			<el-form-item label="姓名" prop="userName">
+        <el-input v-model="dataForm.userName" auto-complete="off"></el-input>
+      </el-form-item>
 			<el-form-item label="密码" prop="password">
 				<el-input v-model="dataForm.password" type="password" auto-complete="off"></el-input>
 			</el-form-item>
 			<el-form-item label="机构" prop="deptName">
-				<popup-tree-input 
-					:data="deptData" 
-					:props="deptTreeProps" 
-					:prop="dataForm.deptName" 
-					:nodeKey="''+dataForm.deptId" 
+				<popup-tree-input
+					:data="deptData"
+					:props="deptTreeProps"
+					:prop="dataForm.deptName"
+					:nodeKey="''+dataForm.deptId"
 					:currentChangeHandle="deptTreeCurrentChangeHandle">
 				</popup-tree-input>
 			</el-form-item>
@@ -114,13 +117,14 @@ export default {
 			editLoading: false,
 			dataFormRules: {
 				name: [
-					{ required: true, message: '请输入用户名', trigger: 'blur' }
+					{ required: true, message: '请输入登陆名', trigger: 'blur' }
 				]
 			},
 			// 新增编辑界面数据
 			dataForm: {
 				id: 0,
 				name: '',
+				userName: '',
 				password: '123456',
 				deptId: 1,
 				deptName: '',
@@ -153,7 +157,7 @@ export default {
 		findUserRoles: function () {
 			this.$api.role.findAll().then((res) => {
 				// 加载角色集合
-				this.roles = res.data	
+				this.roles = res.data
 			})
 		},
 		// 批量删除
@@ -167,6 +171,7 @@ export default {
 			this.dataForm = {
 				id: 0,
 				name: '',
+				userName: '',
 				password: '',
 				deptId: 1,
 				deptName: '',
@@ -189,6 +194,7 @@ export default {
 		},
 		// 编辑
 		submitForm: function () {
+		debugger;
 			this.$refs.dataForm.validate((valid) => {
 				if (valid) {
 					this.$confirm('确认提交吗？', '提示', {}).then(() => {
@@ -225,28 +231,29 @@ export default {
 			})
 		},
 		// 菜单树选中
-      	deptTreeCurrentChangeHandle (data, node) {
-        	this.dataForm.deptId = data.id
-        	this.dataForm.deptName = data.name
+    deptTreeCurrentChangeHandle (data, node) {
+        this.dataForm.deptId = data.id
+        this.dataForm.deptName = data.name
 		},
 		// 时间格式化
-      	dateFormat: function (row, column, cellValue, index){
-          	return format(row[column.property])
-      	},
+  	dateFormat: function (row, column, cellValue, index){
+    return format(row[column.property])
+  },
 		// 处理表格列过滤显示
-      	displayFilterColumnsDialog: function () {
+  displayFilterColumnsDialog: function () {
 			this.$refs.tableColumnFilterDialog.setDialogVisible(true)
-      	},
+  	},
 		// 处理表格列过滤显示
-      	handleFilterColumns: function (data) {
+  handleFilterColumns: function (data) {
 			this.filterColumns = data.filterColumns
 			this.$refs.tableColumnFilterDialog.setDialogVisible(false)
-      	},
+  },
 		// 处理表格列过滤显示
-      	initColumns: function () {
+  initColumns: function () {
 			this.columns = [
 				{prop:"id", label:"ID", minWidth:50},
-				{prop:"name", label:"用户名", minWidth:120},
+				{prop:"name", label:"登陆名", minWidth:120},
+				{prop:"userName", label:"姓名", minWidth:120},
 				{prop:"deptName", label:"机构", minWidth:120},
 				{prop:"roleNames", label:"角色", minWidth:100},
 				{prop:"email", label:"邮箱", minWidth:120},

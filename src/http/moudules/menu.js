@@ -1,6 +1,6 @@
 import axios from '../axios'
 
-/* 
+/*
  * 菜单管理模块
  */
 
@@ -29,9 +29,19 @@ export const findNavTree = (params) => {
     })
 }
 // 查找导航菜单树
-export const findMenuTree = () => {
+export const findMenuTree = (params) => {
     return axios({
         url: '/menu/findMenuTree',
-        method: 'get'
+        method: 'get',
+        params
     })
 }
+
+// 查找全部系统导航菜单树
+export const findInfoMenuTree = () => {
+  return axios({
+    url: '/menu/findInfoMenuTree',
+    method: 'get'
+  })
+}
+

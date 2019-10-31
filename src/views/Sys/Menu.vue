@@ -20,8 +20,11 @@
       <el-table-column
         prop="id" header-align="center" align="center" width="80" label="ID">
       </el-table-column>
-      <table-tree-column 
-        prop="name" header-align="center" treeKey="id" width="150" label="名称">
+      <table-tree-column
+        prop="name" header-align="center" treeKey="id" width="150" label="菜单名称">
+      </table-tree-column>
+      <table-tree-column
+        prop="infoName" header-align="center" width="150" label="系统名称">
       </table-tree-column>
       <el-table-column header-align="center" align="center" label="图标">
         <template slot-scope="scope">
@@ -35,15 +38,15 @@
           <el-tag v-else-if="scope.row.type === 2" size="small" type="info">按钮</el-tag>
         </template>
       </el-table-column>
-      <el-table-column 
+      <el-table-column
         prop="parentName" header-align="center" align="center" width="120" label="上级菜单">
       </el-table-column>
       <el-table-column
-        prop="url" header-align="center" align="center" width="150" 
+        prop="url" header-align="center" align="center" width="150"
         :show-overflow-tooltip="true" label="菜单URL">
       </el-table-column>
       <el-table-column
-        prop="perms" header-align="center" align="center" width="150" 
+        prop="perms" header-align="center" align="center" width="150"
         :show-overflow-tooltip="true" label="授权标识">
       </el-table-column>
       <el-table-column
@@ -59,7 +62,7 @@
     </el-table>
     <!-- 新增修改界面 -->
     <el-dialog :title="!dataForm.id ? '新增' : '修改'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
-      <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="submitForm()" 
+      <el-form :model="dataForm" :rules="dataRule" ref="dataForm" @keyup.enter.native="submitForm()"
         label-width="80px" :size="size" style="text-align:left;">
         <el-form-item label="菜单类型" prop="type">
           <el-radio-group v-model="dataForm.type">
@@ -70,8 +73,8 @@
           <el-input v-model="dataForm.name" :placeholder="menuTypeList[dataForm.type] + '名称'"></el-input>
         </el-form-item>
         <el-form-item label="上级菜单" prop="parentName">
-            <popup-tree-input 
-              :data="popupTreeData" :props="popupTreeProps" :prop="dataForm.parentName==null||dataForm.parentName==''?'顶级菜单':dataForm.parentName" 
+            <popup-tree-input
+              :data="popupTreeData" :props="popupTreeProps" :prop="dataForm.parentName==null||dataForm.parentName==''?'顶级菜单':dataForm.parentName"
               :nodeKey="''+dataForm.parentId" :currentChangeHandle="handleTreeSelectChange">
             </popup-tree-input>
         </el-form-item>
@@ -99,7 +102,7 @@
           <el-input-number v-model="dataForm.orderNum" controls-position="right" :min="0" label="排序编号"></el-input-number>
         </el-form-item>
         <el-form-item v-if="dataForm.type !== 2" label="菜单图标" prop="icon">
-          <el-row>
+          <el-row>template
             <el-col :span="22">
               <!-- <el-popover
                 ref="iconListPopover"
@@ -158,6 +161,7 @@ export default {
         id: 0,
         type: 1,
         name: "",
+        sysKey: "",
         parentId: 0,
         parentName: "",
         url: "",
@@ -178,11 +182,16 @@ export default {
   },
   methods: {
     // 获取数据
-    findTreeData: function() {
+    findTreeData: function(data) {
       this.loading = true;
-      this.$api.menu.findMenuTree().then(res => {
+      let infoName = this.filters.name;
+      this.$api.menu.findMenuTree({"infoName": this.filters.name}).then(res => {
         this.tableTreeDdata = res.data;
-        this.popupTreeData = this.getParentMenuTree(res.data);
+
+        this.$api.menu.findInfoMenuTree().then(infoRes => {
+            this.popupTreeData = infoRes.data;
+            //this.getParentMenuTree(infoRes.data);
+        });
         this.loading = false;
       });
     },
@@ -190,7 +199,7 @@ export default {
     getParentMenuTree: function(tableTreeDdata) {
       let parent = {
         parentId: 0,
-        name: "顶级菜单",
+        name: "请选择系统",
         children: tableTreeDdata
       };
       return [parent];
@@ -205,6 +214,7 @@ export default {
         name: "",
         parentId: 0,
         parentName: "",
+        syskey: "",
         url: "",
         perms: "",
         orderNum: 0,
@@ -241,6 +251,8 @@ export default {
     },
     // 菜单树选中
     handleTreeSelectChange(data, node) {
+    debugger;
+      this.dataForm.sysKey = data.sysKey;
       this.dataForm.parentId = data.id;
       this.dataForm.parentName = data.name;
     },
@@ -250,6 +262,7 @@ export default {
     },
     // 表单提交
     submitForm() {
+    debugger;
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {
