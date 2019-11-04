@@ -1,10 +1,10 @@
 <template>
-  <div class="container" style="width:99%;margin-top:-25px;">
+  <div class="page-container">
     <!--工具栏-->
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
-          <el-input v-model="filters.label" placeholder="名称"></el-input>
+          <el-input v-model="filters.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
           <kt-button :label="$t('action.search')" perms="sys:sysInfo:view" type="primary" @click="findPage(null)"/>
@@ -25,7 +25,7 @@
         <el-form-item label="id" prop="id"  v-if="dataForm.isPrimaryKey">
           <el-input v-model="dataForm.id" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="系统编码" prop="code">
+        <el-form-item label="系统编码" prop="code" v-if="operation">
           <el-input v-model="dataForm.code" auto-complete="off" placeholder="系统编码，唯一"></el-input>
         </el-form-item>
         <el-form-item label="系统名称" prop="name" >
@@ -75,14 +75,9 @@
                 },
                 columns: [
                     {prop:"id", label:"id", minWidth:100},
-                    {prop:"code", label:"系统编码，唯一", minWidth:100},
+                    {prop:"code", label:"系统编码", minWidth:100},
                     {prop:"name", label:"系统名称", minWidth:100},
                     {prop:"remark", label:"系统描述", minWidth:100},
-                    {prop:"createBy", label:"创建人", minWidth:100},
-                    {prop:"createTime", label:"创建时间", minWidth:100},
-                    {prop:"lastUpdateBy", label:"更新人", minWidth:100},
-                    {prop:"lastUpdateTime", label:"更新时间", minWidth:100},
-                    {prop:"delFlag", label:"是否删除  -1：已删除  0：正常", minWidth:100},
                 ],
                 pageRequest: { pageNum: 1, pageSize: 8 },
                 pageResult: {},
