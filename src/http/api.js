@@ -9,6 +9,8 @@ import * as menu from './moudules/menu'
 import * as dict from './moudules/dict'
 import * as log from './moudules/log'
 import * as sysInfo from './moudules/sysInfo'
+import * as sysService from './moudules/sysService'
+import * as sysApi from './moudules/sysApi'
 
 
 // 默认全部导出
@@ -20,5 +22,7 @@ export default {
   menu,
   dict,
   log,
-  sysInfo
+  sysInfo,
+  sysService,
+  sysApi
 }

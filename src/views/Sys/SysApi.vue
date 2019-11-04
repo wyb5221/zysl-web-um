@@ -16,46 +16,46 @@
 	</div>
 	<!--表格内容栏-->
 	<kt-table permsEdit="sys:sysApi:edit" permsDelete="sys:sysApi:delete"
-		:data="pageResult" :columns="columns" 
+		:data="pageResult" :columns="columns"
 		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
 	</kt-table>
 	<!--新增编辑界面-->
 	<el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="editDialogVisible" :close-on-click-modal="false">
-		<el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size">
+		<el-form :model="dataForm" label-width="100px" :rules="dataFormRules" ref="dataForm" :size="size">
 			<el-form-item label="id" prop="id"  v-if="dataForm.isPrimaryKey">
 				<el-input v-model="dataForm.id" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="微服务表主键" prop="serviceKey"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="微服务主键" prop="serviceKey">
 				<el-input v-model="dataForm.serviceKey" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="接口名称" prop="name"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="接口名称" prop="name">
 				<el-input v-model="dataForm.name" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="接口地址url" prop="url"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="接口地址url" prop="url">
 				<el-input v-model="dataForm.url" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="接口类型：R读W写" prop="apiType"  v-if="dataForm.isPrimaryKey">
-				<el-input v-model="dataForm.apiType" auto-complete="off"></el-input>
+			<el-form-item label="接口类型" prop="apiType">
+				<el-input v-model="dataForm.apiType" auto-complete="off" placeholder="接口类型：R读 W写"></el-input>
 			</el-form-item>
-			<el-form-item label="权限类型：N 无需控制；L 登录控制； R 权限控制" prop="authType"  v-if="dataForm.isPrimaryKey">
-				<el-input v-model="dataForm.authType" auto-complete="off"></el-input>
+			<el-form-item label="权限类型" prop="authType" >
+				<el-input v-model="dataForm.authType" auto-complete="off" placeholder="权限类型：N 无需控制；L 登录控制； R 权限控制"></el-input>
 			</el-form-item>
-			<el-form-item label="接口描述" prop="remark"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="接口描述" prop="remark">
 				<el-input v-model="dataForm.remark" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="创建人" prop="createBy"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="创建人" prop="createBy"  v-if="false">
 				<el-input v-model="dataForm.createBy" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="创建时间" prop="createTime"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="创建时间" prop="createTime"  v-if="false">
 				<el-input v-model="dataForm.createTime" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="更新人" prop="lastUpdateBy"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="更新人" prop="lastUpdateBy"  v-if="false">
 				<el-input v-model="dataForm.lastUpdateBy" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="更新时间" prop="lastUpdateTime"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="更新时间" prop="lastUpdateTime"  v-if="false">
 				<el-input v-model="dataForm.lastUpdateTime" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="是否删除  -1：已删除  0：正常" prop="delFlag"  v-if="dataForm.isPrimaryKey">
+			<el-form-item label="是否删除  -1：已删除  0：正常" prop="delFlag"  v-if="false">
 				<el-input v-model="dataForm.delFlag" auto-complete="off"></el-input>
 			</el-form-item>
 		</el-form>
