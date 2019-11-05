@@ -71,6 +71,12 @@
 			<el-form-item label="手机" prop="mobile">
 				<el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
 			</el-form-item>
+			<el-form-item label="最后一次登录时间" prop="lastLoginTime" v-bind:readonly="isReadOnly">
+				<el-input v-model="dataForm.lastLoginTime" auto-complete="off"></el-input>
+			</el-form-item>
+			<el-form-item label="连续登录错误次数" prop="loginErrorTimes" :readonly="true">
+				<el-input v-model="dataForm.loginErrorTimes" auto-complete="off"></el-input>
+			</el-form-item>
 			<el-form-item label="角色" prop="userRoles" v-if="!operation">
 				<el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
 					 style="width: 100%;">
@@ -130,6 +136,8 @@ export default {
 				deptName: '',
 				email: 'test@qq.com',
 				mobile: '13889700023',
+				lastLoginTime: '',
+				loginErrorTimes: '',
 				status: 1,
 				userRoles: []
 			},
@@ -194,7 +202,6 @@ export default {
 		},
 		// 编辑
 		submitForm: function () {
-		debugger;
 			this.$refs.dataForm.validate((valid) => {
 				if (valid) {
 					this.$confirm('确认提交吗？', '提示', {}).then(() => {
@@ -235,10 +242,6 @@ export default {
         this.dataForm.deptId = data.id
         this.dataForm.deptName = data.name
 		},
-		// 时间格式化
-  	dateFormat: function (row, column, cellValue, index){
-    return format(row[column.property])
-  },
 		// 处理表格列过滤显示
   displayFilterColumnsDialog: function () {
 			this.$refs.tableColumnFilterDialog.setDialogVisible(true)
@@ -259,13 +262,19 @@ export default {
 				{prop:"email", label:"邮箱", minWidth:120},
 				{prop:"mobile", label:"手机", minWidth:100},
 				{prop:"status", label:"状态", minWidth:70},
+				{prop:"lastLoginTime", label:"最后一次登录时间", minWidth:120, formatter:this.dateFormat},
+				{prop:"loginErrorTimes", label:"连续登录错误次数", minWidth:70},
 				// {prop:"createBy", label:"创建人", minWidth:120},
-				// {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
+				 {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
 				// {prop:"lastUpdateBy", label:"更新人", minWidth:100},
 				// {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 			]
 			this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      	}
+  	},
+    // 时间格式化
+  	dateFormat: function (row, column, cellValue, index){
+    return format(row[column.property])
+  },
 	},
 	mounted() {
 		this.findDeptTree()

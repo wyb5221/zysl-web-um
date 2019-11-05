@@ -251,7 +251,6 @@ export default {
     },
     // 菜单树选中
     handleTreeSelectChange(data, node) {
-    debugger;
       this.dataForm.sysKey = data.sysKey;
       this.dataForm.parentId = data.id;
       this.dataForm.parentName = data.name;
@@ -262,7 +261,6 @@ export default {
     },
     // 表单提交
     submitForm() {
-    debugger;
       this.$refs["dataForm"].validate(valid => {
         if (valid) {
           this.$confirm("确认提交吗？", "提示", {}).then(() => {

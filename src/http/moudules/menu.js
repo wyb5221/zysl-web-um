@@ -38,10 +38,11 @@ export const findMenuTree = (params) => {
 }
 
 // 查找全部系统导航菜单树
-export const findInfoMenuTree = () => {
+export const findInfoMenuTree = (params) => {
   return axios({
     url: '/menu/findInfoMenuTree',
-    method: 'get'
+    method: 'get',
+    params
   })
 }
 
