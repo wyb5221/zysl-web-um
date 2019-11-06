@@ -4,7 +4,7 @@
     <div class="toolbar" style="float:left;padding-top:10px;padding-left:15px;">
       <el-form :inline="true" :model="filters" :size="size">
         <el-form-item>
-          <el-input v-model="filters.label" placeholder="名称"></el-input>
+          <el-input v-model="filters.name" placeholder="名称"></el-input>
         </el-form-item>
         <el-form-item>
           <kt-button :label="$t('action.search')" perms="sys:sysService:view" type="primary" @click="findPage(null)"/>
@@ -25,9 +25,13 @@
         <el-form-item label="id" prop="id"  v-if="dataForm.isPrimaryKey">
           <el-input v-model="dataForm.id" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="系统表主键" prop="sysKey">
+        <!--<el-form-item label="系统表主键" prop="sysKey">
           <el-input v-model="dataForm.sysKey" auto-complete="off"></el-input>
+        </el-form-item>-->
+        <el-form-item label="所属系统" prop="sysKey">
+          <BaseSelector ref="sysBaseSelector" v-model="dataForm.sysKey" :options="sysList" @selectChangeEvent = "sysSelectChanged"></BaseSelector>
         </el-form-item>
+
         <el-form-item label="微服务编号" prop="code">
           <el-input v-model="dataForm.code" auto-complete="off"></el-input>
         </el-form-item>
@@ -70,33 +74,31 @@
 <script>
     import KtTable from "@/views/Core/KtTable"
     import KtButton from "@/views/Core/KtButton"
+    import BaseSelector from "@/components/BaseSelector"
     import { format } from "@/utils/datetime"
     export default {
         components:{
             KtTable,
-            KtButton
+            KtButton,
+            BaseSelector
         },
         data() {
             return {
                 size: 'small',
                 filters: {
-                    label: ''
+                    name: ''
                 },
                 columns: [
                     {prop:"id", label:"id", minWidth:100},
-                    {prop:"sysKey", label:"系统表主键", minWidth:100},
+                    /*{prop:"sysKey", label:"系统表主键", minWidth:100},*/
                     {prop:"code", label:"微服务编号", minWidth:100},
                     {prop:"name", label:"微服务名称", minWidth:100},
-                    {prop:"gateCode", label:"网关编号，比如/gate/01,则编号为01", minWidth:100},
+                    {prop:"gateCode", label:"网关编号", minWidth:100},
                     {prop:"developer", label:"开发负责人", minWidth:100},
                     {prop:"remark", label:"微服务描述", minWidth:100},
-                    {prop:"createBy", label:"创建人", minWidth:100},
-                    {prop:"createTime", label:"创建时间", minWidth:100},
-                    {prop:"lastUpdateBy", label:"更新人", minWidth:100},
-                    {prop:"lastUpdateTime", label:"更新时间", minWidth:100},
-                    {prop:"delFlag", label:"是否删除  -1：已删除  0：正常", minWidth:100},
                 ],
                 pageRequest: { pageNum: 1, pageSize: 8 },
+                subSysPageRequest:{ pageNum: 1, pageSize: 999 },
                 pageResult: {},
 
                 operation: false, // true:新增, false:编辑
@@ -107,6 +109,7 @@
                         { required: true, message: '请输入名称', trigger: 'blur' }
                     ]
                 },
+                sysList:[],
                 // 新增编辑界面数据
                 dataForm: {
                     id: null,
@@ -130,10 +133,16 @@
                 if(data !== null) {
                     this.pageRequest = data.pageRequest
                 }
-                this.pageRequest.columnFilters = {label: {name:'label', value:this.filters.label}}
+                this.pageRequest.columnFilters = {name: {name:'name', value:this.filters.name}}
                 this.$api.sysService.findPage(this.pageRequest).then((res) => {
                     this.pageResult = res.data
                 }).then(data!=null?data.callback:'')
+            },
+            // 加载子系统信息
+            findSubSyss: function () {
+                this.$api.sysInfo.findPage(this.subSysPageRequest).then((res) => {
+                    this.sysList = res.data.content
+                })
             },
             // 批量删除
             handleDelete: function (data) {
@@ -144,18 +153,21 @@
                 this.editDialogVisible = true
                 this.operation = true
                 this.dataForm = {
-                    id: null,
-                    sysKey:null,
-                    code: null,
-                    name: null,
-                    gateCode: null,
-                    developer: null,
-                    remark: null,
-                    createBy: null,
-                    createTime: null,
-                    lastUpdateBy: null,
-                    lastUpdateTime: null,
-                    delFlag: null,
+                    id: '',
+                    sysKey:'',
+                    code: '',
+                    name: '',
+                    gateCode: '',
+                    developer: '',
+                    remark: '',
+                    createBy: '',
+                    createTime: '',
+                    lastUpdateBy: '',
+                    lastUpdateTime: '',
+                    delFlag: '',
+                }
+                if(this.$refs.sysBaseSelector != null && this.$refs.sysBaseSelector!='undefined'){
+                    this.$refs.sysBaseSelector.setSelectOptionNum(this.dataForm.sysKey)
                 }
             },
             // 显示编辑界面
@@ -163,6 +175,9 @@
                 this.editDialogVisible = true
                 this.operation = false
                 this.dataForm = Object.assign({}, params.row)
+                if(this.$refs.sysBaseSelector != null && this.$refs.sysBaseSelector!='undefined'){
+                    this.$refs.sysBaseSelector.setSelectOptionNum(this.dataForm.sysKey)
+                }
             },
             // 编辑
             submitForm: function () {
@@ -189,9 +204,15 @@
             // 时间格式化
             dateFormat: function (row, column, cellValue, index){
                 return format(row[column.property])
+            },
+            sysSelectChanged:function(sysId){
+                this.dataForm.sysKey = sysId
             }
         },
         mounted() {
+        },
+        created() {
+            this.findSubSyss()
         }
     }
 </script>
