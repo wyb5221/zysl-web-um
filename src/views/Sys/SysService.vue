@@ -29,7 +29,7 @@
           <el-input v-model="dataForm.sysKey" auto-complete="off"></el-input>
         </el-form-item>-->
         <el-form-item label="所属系统" prop="sysKey">
-          <BaseSelector ref="sysBaseSelector" v-model="dataForm.sysKey" :options="sysList" @selectChangeEvent = "sysSelectChanged"></BaseSelector>
+          <BaseSelector ref="sysBaseSelector" v-model="dataForm.sysKey" :isForbidden="!operation" :options="sysList" @selectChangeEvent = "sysSelectChanged"></BaseSelector>
         </el-form-item>
 
         <el-form-item label="微服务编号" prop="code">

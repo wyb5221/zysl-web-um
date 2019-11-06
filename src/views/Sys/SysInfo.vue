@@ -110,7 +110,7 @@
                 if(data !== null) {
                     this.pageRequest = data.pageRequest
                 }
-                this.pageRequest.columnFilters = {label: {name:'label', value:this.filters.label}}
+                this.pageRequest.columnFilters = {name: {name:'name', value:this.filters.name}}
                 this.$api.sysInfo.findPage(this.pageRequest).then((res) => {
                     this.pageResult = res.data
                 }).then(data!=null?data.callback:'')

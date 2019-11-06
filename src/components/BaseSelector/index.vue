@@ -1,5 +1,5 @@
 <template>
-    <el-select v-model="selectItemValue" @change="selectChangedFn" placeholder="请选择" class="el-input el-input--small">
+    <el-select :disabled="isForbidden" v-model="selectItemValue" @change="selectChangedFn" placeholder="请选择" class="el-input el-input--small">
       <el-option
         v-for="item in options"
         :key="item.id"
@@ -23,6 +23,10 @@
                     id: '2',
                     name: 'test2'
                 }]
+            },
+            isForbidden:{
+                type:Boolean,
+                default:false
             }
         },
         data() {
