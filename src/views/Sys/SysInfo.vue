@@ -71,7 +71,7 @@
             return {
                 size: 'small',
                 filters: {
-                    label: ''
+                    name: ''
                 },
                 columns: [
                     {prop:"id", label:"id", minWidth:100},
