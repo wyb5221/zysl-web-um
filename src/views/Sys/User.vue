@@ -71,7 +71,7 @@
 			<el-form-item label="手机" prop="mobile">
 				<el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="最后一次登录时间" prop="lastLoginTime" v-bind:readonly="isReadOnly">
+			<el-form-item label="最后一次登录时间" prop="lastLoginTime" >
 				<el-input v-model="dataForm.lastLoginTime" auto-complete="off"></el-input>
 			</el-form-item>
 			<el-form-item label="连续登录错误次数" prop="loginErrorTimes" :readonly="true">
@@ -251,6 +251,7 @@ export default {
 			this.filterColumns = data.filterColumns
 			this.$refs.tableColumnFilterDialog.setDialogVisible(false)
   },
+    // boolean: {0: '禁用 ', 1: '正常', 2: '锁定', 3: '注销'},
 		// 处理表格列过滤显示
   initColumns: function () {
 			this.columns = [
@@ -261,7 +262,7 @@ export default {
 				{prop:"roleNames", label:"角色", minWidth:100},
 				{prop:"email", label:"邮箱", minWidth:120},
 				{prop:"mobile", label:"手机", minWidth:100},
-				{prop:"status", label:"状态", minWidth:70},
+				{prop:"status", label:"状态", minWidth:70,},
 				{prop:"lastLoginTime", label:"最后一次登录时间", minWidth:120, formatter:this.dateFormat},
 				{prop:"loginErrorTimes", label:"连续登录错误次数", minWidth:70},
 				// {prop:"createBy", label:"创建人", minWidth:120},
@@ -277,8 +278,10 @@ export default {
   },
 	},
 	mounted() {
+
 		this.findDeptTree()
 		this.initColumns()
+		this.dateFormat()
 	}
 }
 </script>
