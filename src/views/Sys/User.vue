@@ -36,9 +36,9 @@
 		</table-column-filter-dialog>
 	</div>
 	<!--表格内容栏-->
-	<kt-table :height="350" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
-		:data="pageResult" :columns="filterColumns"
-		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
+	<kt-table :height="350" permsEdit="sys:user:edit" permsDelete="sys:user:delete" permsUnlock="sys:user:unlock"
+		:data="pageResult" :columns="columns"
+		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete" @handleUnlock="handleUnlock">
 	</kt-table>
 	<!--新增编辑界面-->
 	<el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
@@ -71,12 +71,13 @@
 			<el-form-item label="手机" prop="mobile">
 				<el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
 			</el-form-item>
-			<el-form-item label="最后一次登录时间" prop="lastLoginTime" >
-				<el-input v-model="dataForm.lastLoginTime" auto-complete="off"></el-input>
+		<!--	<el-form-item label="最后一次登录时间" prop="lastLoginTime" :formatter="dateFormat">
+				<el-input v-model="dataForm.lastLoginTime" auto-complete="off" :formatter="dateFormat"></el-input>
 			</el-form-item>
 			<el-form-item label="连续登录错误次数" prop="loginErrorTimes" :readonly="true">
 				<el-input v-model="dataForm.loginErrorTimes" auto-complete="off"></el-input>
 			</el-form-item>
+			-->
 			<el-form-item label="角色" prop="userRoles" v-if="!operation">
 				<el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
 					 style="width: 100%;">
@@ -172,6 +173,10 @@ export default {
 		handleDelete: function (data) {
 			this.$api.user.batchDelete(data.params).then(data!=null?data.callback:'')
 		},
+		// 解锁
+    handleUnlock: function (data) {
+      this.$api.user.batunlock(data.params).then(data!=null?data.callback:'')
+    },
 		// 显示新增界面
 		handleAdd: function () {
 			this.dialogVisible = true
@@ -270,7 +275,6 @@ export default {
 				// {prop:"lastUpdateBy", label:"更新人", minWidth:100},
 				// {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 			]
-			this.filterColumns = JSON.parse(JSON.stringify(this.columns));
   	},
     // 时间格式化
   	dateFormat: function (row, column, cellValue, index){
