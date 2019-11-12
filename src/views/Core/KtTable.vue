@@ -1,12 +1,12 @@
 <template>
   <div>
     <!--表格栏-->
-    <el-table :data="data.content" :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange" 
+    <el-table :data="data.content" :highlight-current-row="highlightCurrentRow" @selection-change="selectionChange"
           @current-change="handleCurrentChange" v-loading="loading" :element-loading-text="$t('action.loading')" :border="border" :stripe="stripe"
           :show-overflow-tooltip="showOverflowTooltip" :max-height="maxHeight" :height="height" :size="size" :align="align" style="width:100%;" >
-      <el-table-column type="selection" width="40" v-if="showBatchDelete & showOperation"></el-table-column>
+      <el-table-column type="selection" width="40" v-if="(showBatchDelete & showOperation) || showSelection"></el-table-column>
       <el-table-column v-for="column in columns" header-align="center" align="center"
-        :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth" 
+        :prop="column.prop" :label="column.label" :width="column.width" :min-width="column.minWidth"
         :fixed="column.fixed" :key="column.prop" :type="column.type" :formatter="column.formatter"
         :sortable="column.sortable==null?true:column.sortable">
       </el-table-column>
@@ -18,10 +18,10 @@
       </el-table-column>
     </el-table>
     <!--分页栏-->
-    <div class="toolbar" style="padding:10px;">
-      <kt-button :label="$t('action.batchDelete')" :perms="permsDelete" :size="size" type="danger" @click="handleBatchDelete()" 
+    <div class="toolbar" v-if="showPagination" style="padding:10px;">
+      <kt-button :label="$t('action.batchDelete')" :perms="permsDelete" :size="size" type="danger" @click="handleBatchDelete()"
         :disabled="this.selections.length===0" style="float:left;" v-if="showBatchDelete & showOperation"/>
-      <el-pagination layout="total, prev, pager, next, jumper" @current-change="refreshPageRequest" 
+      <el-pagination layout="total, prev, pager, next, jumper" @current-change="refreshPageRequest"
         :current-page="pageRequest.pageNum" :page-size="pageRequest.pageSize" :total="data.totalSize" style="float:right;">
       </el-pagination>
     </div>
@@ -56,6 +56,10 @@ export default {
       type: Number,
       default: 250
     },
+    showPagination: {  // 是否显示分页组件
+      type: Boolean,
+      default: true
+    },
     showOperation: {  // 是否显示操作组件
       type: Boolean,
       default: true
@@ -79,6 +83,10 @@ export default {
     showBatchDelete: {  // 是否显示操作组件
       type: Boolean,
       default: true
+    },
+    showSelection: {  // 是否显示选择框
+        type: Boolean,
+        default: false
     }
   },
   data() {

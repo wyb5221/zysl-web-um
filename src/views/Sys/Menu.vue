@@ -53,8 +53,9 @@
         prop="orderNum" header-align="center" align="center" label="排序">
       </el-table-column>
       <el-table-column
-        fixed="right" header-align="center" align="center" width="185" :label="$t('action.operation')">
+        fixed="right" header-align="center" align="center" width="300" :label="$t('action.operation')">
         <template slot-scope="scope">
+          <kt-button v-show="scope.row.type===1" icon="fa fa-edit" :label="$t('action.bindSysApi')" perms="sys:menu:edit" @click="handleBindApi(scope.row)"/>
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" perms="sys:menu:edit" @click="handleEdit(scope.row)"/>
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" perms="sys:menu:delete" type="danger" @click="handleDelete(scope.row)"/>
         </template>
@@ -104,21 +105,6 @@
         <el-form-item v-if="dataForm.type !== 2" label="菜单图标" prop="icon">
           <el-row>template
             <el-col :span="22">
-              <!-- <el-popover
-                ref="iconListPopover"
-                placement="bottom-start"
-                trigger="click"
-                popper-class="mod-menu__icon-popover">
-                <div class="mod-menu__icon-list">
-                  <el-button
-                    v-for="(item, index) in dataForm.iconList"
-                    :key="index"
-                    @click="iconActiveHandle(item)"
-                    :class="{ 'is-active': item === dataForm.icon }">
-                    <icon-svg :name="item"></icon-svg>
-                  </el-button>
-                </div>
-              </el-popover> -->
               <el-input v-model="dataForm.icon" v-popover:iconListPopover :readonly="false" placeholder="菜单图标名称（如：fa fa-home fa-lg）" class="icon-list__input"></el-input>
             </el-col>
             <el-col :span="2" class="icon-list__tips">
@@ -132,20 +118,60 @@
         <el-button :size="size"  type="primary" @click="submitForm()">{{$t('action.comfirm')}}</el-button>
       </span>
     </el-dialog>
+
+    <!-- 绑定api界面 -->
+    <el-dialog :title="'接口绑定'" width="50%" :visible.sync="bindApidialogVisible" :close-on-click-modal="false">
+      <el-form :model="bindApiDataForm" :rules="dataRule" ref="bindApiDataForm"
+               label-width="80px" :size="size" style="text-align:left;">
+        <el-form-item label="服务" prop="serviceKeyQuery">
+          <BaseSelector ref="serviceBaseSelector"
+                        v-model="bindApiDataForm.serviceKeyQuery" :options="bindApiDataForm.serviceList"
+                        @selectChangeEvent = "serviceSelectChanged"></BaseSelector>
+        </el-form-item>
+        <el-form-item label="接口名称" prop="sysApiNameQuery">
+          <el-input v-model="bindApiDataForm.sysApiNameQuery" placeholder="按接口名称模糊查询接口列表"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="sysApiQueryClick">查询</el-button>
+          <!--<el-button :size="size"  @click="bindApidialogVisible = false">{{$t('action.cancel')}}</el-button>-->
+        </el-form-item>
+        <el-form-item></el-form-item>
+        <el-divider content-position="right">未绑定列表--<el-button @click="addApiBindClick">绑定所选接口</el-button></el-divider>
+        <!--未绑定的api列表-->
+        <kt-table permsEdit="sys:menu:edit" permsDelete="sys:menu:delete"
+                  :data="bindApiDataForm.unBindApiList" :columns="apiListColumns" :showPagination="false" :showOperation="false"
+                  :showSelection="true" @selectionChange="bindApiSelectionChange"
+                  @findPage="findApiList" >
+        </kt-table>
+        <!--已绑定的api列表-->
+        <el-divider content-position="right">已绑定列表--<el-button @click="deleteApiClick">解绑所选接口</el-button></el-divider>
+        <kt-table permsEdit="sys:menu:edit" permsDelete="sys:menu:delete"
+                  :data="bindApiDataForm.bindApiList" :columns="apiListColumns" :showPagination="false" :showOperation="false"
+                  :showSelection="true" @selectionChange="unBindApiSelectionChange"
+                  @findPage="findApiList" >
+        </kt-table>
+      </el-form>
+
+
+    </el-dialog>
   </div>
 </template>
 
 <script>
+import KtTable from "@/views/Core/KtTable";
 import KtButton from "@/views/Core/KtButton";
 import TableTreeColumn from "@/views/Core/TableTreeColumn";
 import PopupTreeInput from "@/components/PopupTreeInput";
 import FaIconTooltip from "@/components/FaIconTooltip";
+import BaseSelector from "@/components/BaseSelector";
 export default {
   components: {
+    KtTable,
     PopupTreeInput,
     KtButton,
     TableTreeColumn,
-    FaIconTooltip
+    FaIconTooltip,
+    BaseSelector
   },
   data() {
     return {
@@ -156,6 +182,7 @@ export default {
       },
       tableTreeDdata: [],
       dialogVisible: false,
+      bindApidialogVisible: false,
       menuTypeList: ["目录", "菜单", "按钮"],
       dataForm: {
         id: 0,
@@ -170,6 +197,21 @@ export default {
         icon: "",
         iconList: []
       },
+      bindApiDataForm: {
+        id: 0,
+        sysKey: "",
+        serviceKeyQuery: "",
+        sysApiNameQuery:"",
+        serviceList:[],
+        unBindApiList:{content:[]},
+        bindApiList:{content:[]},
+        bindApiSelections:[],
+        unBindApiSelections:[]
+     },
+      apiListColumns: [
+        {prop:"id", label:"id", minWidth:100},
+        {prop:"name", label:"接口名称", minWidth:100},
+      ],
       dataRule: {
         name: [{ required: true, message: "菜单名称不能为空", trigger: "blur" }]
       },
@@ -227,6 +269,95 @@ export default {
       this.dialogVisible = true;
       Object.assign(this.dataForm, row);
     },
+    //显示绑定api界面
+    handleBindApi: function(row) {
+        //服务下拉列表绑定
+        this.$api.menu.findServicesBySysKey({"sysKey": row.sysKey}).then(res => {
+            this.bindApidialogVisible = true;
+            Object.assign(this.bindApiDataForm, row);
+            this.bindApiDataForm.serviceKeyQuery = row.sysKey;
+            this.bindApiDataForm.serviceList = res.data.content
+        });
+
+    },
+    bindApiSelectionChange:function(selections){
+      this.bindApiDataForm.bindApiSelections = selections;
+    },
+    unBindApiSelectionChange:function(selections){
+        this.bindApiDataForm.unBindApiSelections = selections;
+    },
+    // 添加api绑定
+    addApiBindClick: function () {
+        let ids = this.bindApiDataForm.bindApiSelections.selections.map(item => item.id).toString()
+        this.$confirm("确定添加绑定吗？", '提示：', {
+            type: 'warning'
+        }).then(
+            ()=>{
+                let params = {"bindList":[]};
+                for(var i=0; i<ids.length; i++) {
+                    params.bindList.push({'menuKey':this.bindApiDataForm.id,'apiKey':ids[i]})
+                }
+                this.$api.menu.bindApi(params).then(
+                    res => {
+                        if (res.code == 200) {
+                            this.$message({message: '操作成功', type: 'success'})
+                            this.sysApiQueryClick();
+                        } else {
+                            this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+                        }
+                    }
+                )
+            }
+        ).catch(() => {
+        })
+    },
+    // 删除api绑定
+    deleteApiClick: function () {
+        debugger;
+        let ids = this.bindApiDataForm.unBindApiSelections.selections.map(item => item.id).toString()
+        this.$confirm("确定删除绑定吗？", '提示：', {
+            type: 'warning'
+        }).then(
+            ()=>{
+                let params = {"bindList":[]};
+                for(var i=0; i<ids.length; i++) {
+                    params.bindList.push({'menuKey':this.bindApiDataForm.id,'apiKey':ids[i]})
+                }
+                this.$api.menu.unbindApi(params).then(
+                    res => {
+                        if (res.code == 200) {
+                            this.$message({message: '操作成功', type: 'success'})
+                            this.sysApiQueryClick();
+                        } else {
+                            this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+                        }
+                    }
+                )
+            }
+        ).catch(() => {
+        })
+    },
+    //查询api列表
+    sysApiQueryClick: function(){
+        this.findApiList()
+    },
+    findApiList: function(data){
+        //api列表,包括绑定的和未绑定的
+        let params = {
+            "serviceKey": this.bindApiDataForm.serviceKeyQuery,
+            "menuKey": this.bindApiDataForm.id,
+            "name": this.bindApiDataForm.sysApiNameQuery
+        }
+        this.$api.menu.findApiList(params).then(res => {
+            if(res.data!=null){
+                this.bindApiDataForm.bindApiList.content = res.data.bindList;
+                this.bindApiDataForm.unBindApiList.content = res.data.bindingList;
+            }
+        }).then(data!=null?data.callback:'');
+    },
+    serviceSelectChanged:function(serviceId){
+      this.bindApiDataForm.serviceKeyQuery = serviceId
+  },
     // 删除
     handleDelete(row) {
       this.$confirm("确认删除选中记录吗？", "提示", {

@@ -8,7 +8,9 @@
         "restore": "Restore",
         "backupRestore": "Backup Restore",
         "versionName": "Version",
-        "exit": "Exit"
+        "exit": "Exit",
+        "bindSysApi": "BindApi"
+
     },
     "action": {
         "operation": "Operation",
