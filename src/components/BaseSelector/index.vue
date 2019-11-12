@@ -37,7 +37,6 @@
         },
         methods: {
             initData() {
-                this.bindItems = this.options
                 this.$emit('selectChangeEvent', this.selectItemValue)
             },
             selectChangedFn(){
@@ -46,7 +45,6 @@
             setSelectOptionNum(sNum) {
                 this.selectItemValue = sNum;
             },
-
         },
         created() {
             this.initData()

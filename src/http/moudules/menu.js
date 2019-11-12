@@ -45,3 +45,39 @@ export const findInfoMenuTree = () => {
   })
 }
 
+// 查找系统下的服务
+export const findServicesBySysKey = (params) => {
+  return axios({
+    url: '/sysService/findBySysKey',
+    method: 'get',
+    params
+  })
+}
+
+// 查找菜单对应的apiList
+export const findApiList = (params) => {
+  return axios({
+    url: '/sysApi/findByKey',
+    method: 'get',
+    params
+  })
+}
+
+// 添加菜单绑定api
+export const bindApi = (data) => {
+  return axios({
+    url: '/sysMenuApi/bindApi',
+    method: 'post',
+    data
+  })
+}
+
+// 删除菜单绑定api
+export const unbindApi = (data) => {
+  return axios({
+    url: '/sysMenuApi/unbindApi',
+    method: 'post',
+    data
+  })
+}
+
