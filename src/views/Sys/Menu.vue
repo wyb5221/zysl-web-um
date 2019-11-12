@@ -120,7 +120,7 @@
     </el-dialog>
 
     <!-- 绑定api界面 -->
-    <el-dialog :title="'接口绑定'" width="40%" :visible.sync="bindApidialogVisible" :close-on-click-modal="false">
+    <el-dialog :title="'接口绑定'" width="50%" :visible.sync="bindApidialogVisible" :close-on-click-modal="false">
       <el-form :model="bindApiDataForm" :rules="dataRule" ref="bindApiDataForm"
                label-width="80px" :size="size" style="text-align:left;">
         <el-form-item label="服务" prop="serviceKeyQuery">
@@ -133,11 +133,10 @@
         </el-form-item>
         <el-form-item>
           <el-button @click="sysApiQueryClick">查询</el-button>
-          <!--<el-button @click="addApiBindClick">新增</el-button>-->
-         <!-- <el-button @click="deleteApiClick">删除</el-button>-->
-          <el-button :size="size"  @click="bindApidialogVisible = false">{{$t('action.cancel')}}</el-button>
+          <!--<el-button :size="size"  @click="bindApidialogVisible = false">{{$t('action.cancel')}}</el-button>-->
         </el-form-item>
-        <el-divider>未绑定列表--<el-button @click="addApiBindClick">绑定所选接口</el-button></el-divider>
+        <el-form-item></el-form-item>
+        <el-divider content-position="right">未绑定列表--<el-button @click="addApiBindClick">绑定所选接口</el-button></el-divider>
         <!--未绑定的api列表-->
         <kt-table permsEdit="sys:menu:edit" permsDelete="sys:menu:delete"
                   :data="bindApiDataForm.unBindApiList" :columns="apiListColumns" :showPagination="false" :showOperation="false"
@@ -145,7 +144,7 @@
                   @findPage="findApiList" >
         </kt-table>
         <!--已绑定的api列表-->
-        <el-divider>已绑定列表--<el-button @click="deleteApiClick">解绑所选接口</el-button></el-divider>
+        <el-divider content-position="right">已绑定列表--<el-button @click="deleteApiClick">解绑所选接口</el-button></el-divider>
         <kt-table permsEdit="sys:menu:edit" permsDelete="sys:menu:delete"
                   :data="bindApiDataForm.bindApiList" :columns="apiListColumns" :showPagination="false" :showOperation="false"
                   :showSelection="true" @selectionChange="unBindApiSelectionChange"
@@ -302,7 +301,7 @@ export default {
                     res => {
                         if (res.code == 200) {
                             this.$message({message: '操作成功', type: 'success'})
-                            sysApiQueryClick();
+                            this.sysApiQueryClick();
                         } else {
                             this.$message({message: '操作失败, ' + res.msg, type: 'error'})
                         }
@@ -328,7 +327,7 @@ export default {
                     res => {
                         if (res.code == 200) {
                             this.$message({message: '操作成功', type: 'success'})
-                            sysApiQueryClick();
+                            this.sysApiQueryClick();
                         } else {
                             this.$message({message: '操作失败, ' + res.msg, type: 'error'})
                         }
