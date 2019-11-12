@@ -174,7 +174,7 @@ export default {
 		// 获取数据
 		findTreeData: function () {
 			this.menuLoading = true
-			this.$api.menu.findInfoMenuTree().then((res) => {
+			this.$api.menu.findInfoMenuTree({"interfaceType": "role"}).then((res) => {
         this.menuData = res.data
         this.menuLoading = false
       })
@@ -262,7 +262,7 @@ export default {
 				<span style="text-algin:center;margin-right:80px;">{data.name}</span>
 				<span style="text-algin:center;margin-right:80px;">
 					<el-tag type={data.type === 0?'':data.type === 1?'success':'info'} size="small">
-						{data.type === 0?'目录':data.type === 1?'菜单':'按钮'}
+						{data.type === 0?'目录':data.type === 1?'菜单': data.type === 2 ? '按钮': data.type === 3 ? '接口' : '系统'}
 					</el-tag>
 				</span>
 				<span style="text-algin:center;margin-right:80px;"> <i class={data.icon}></i></span>

@@ -3,10 +3,6 @@
         "home": "Home",
         "login": "Login",
         "logout": "Logout",
-        "doc": "Document",
-        "blog": "Blog",
-        "projectRepo": "Project",
-        "myMsg": "My Message",
         "config": "Config",
         "backup": "Backup",
         "restore": "Restore",
@@ -14,6 +10,7 @@
         "versionName": "Version",
         "exit": "Exit",
         "bindSysApi": "BindApi"
+
     },
     "action": {
         "operation": "Operation",

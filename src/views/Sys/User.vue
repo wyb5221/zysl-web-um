@@ -36,10 +36,10 @@
 		</table-column-filter-dialog>
 	</div>
 	<!--表格内容栏-->
-	<kt-table :height="350" permsEdit="sys:user:edit" permsDelete="sys:user:delete"
-		:data="pageResult" :columns="filterColumns"
-		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
-	</kt-table>
+	<kt-user-table :height="350" permsEdit="sys:user:edit" permsDelete="sys:user:delete" permsUnlock="sys:user:unlock"
+		:data="pageResult" :columns="columns"
+		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete" @handleUnlock="handleUnlock">
+	</kt-user-table>
 	<!--新增编辑界面-->
 	<el-dialog :title="operation?'新增':'编辑'" width="40%" :visible.sync="dialogVisible" :close-on-click-modal="false">
 		<el-form :model="dataForm" label-width="80px" :rules="dataFormRules" ref="dataForm" :size="size"
@@ -71,6 +71,13 @@
 			<el-form-item label="手机" prop="mobile">
 				<el-input v-model="dataForm.mobile" auto-complete="off"></el-input>
 			</el-form-item>
+		<!--	<el-form-item label="最后一次登录时间" prop="lastLoginTime" :formatter="dateFormat">
+				<el-input v-model="dataForm.lastLoginTime" auto-complete="off" :formatter="dateFormat"></el-input>
+			</el-form-item>
+			<el-form-item label="连续登录错误次数" prop="loginErrorTimes" :readonly="true">
+				<el-input v-model="dataForm.loginErrorTimes" auto-complete="off"></el-input>
+			</el-form-item>
+			-->
 			<el-form-item label="角色" prop="userRoles" v-if="!operation">
 				<el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
 					 style="width: 100%;">
@@ -90,14 +97,14 @@
 
 <script>
 import PopupTreeInput from "@/components/PopupTreeInput"
-import KtTable from "@/views/Core/KtTable"
+import KtUserTable from "@/views/Core/KtUserTable"
 import KtButton from "@/views/Core/KtButton"
 import TableColumnFilterDialog from "@/views/Core/TableColumnFilterDialog"
 import { format } from "@/utils/datetime"
 export default {
 	components:{
 		PopupTreeInput,
-		KtTable,
+		KtUserTable,
 		KtButton,
 		TableColumnFilterDialog
 	},
@@ -130,6 +137,8 @@ export default {
 				deptName: '',
 				email: 'test@qq.com',
 				mobile: '13889700023',
+				lastLoginTime: '',
+				loginErrorTimes: '',
 				status: 1,
 				userRoles: []
 			},
@@ -164,6 +173,10 @@ export default {
 		handleDelete: function (data) {
 			this.$api.user.batchDelete(data.params).then(data!=null?data.callback:'')
 		},
+		// 解锁
+    handleUnlock: function (data) {
+      this.$api.user.batUnlock(data.params).then(data!=null?data.callback:'')
+    },
 		// 显示新增界面
 		handleAdd: function () {
 			this.dialogVisible = true
@@ -194,7 +207,6 @@ export default {
 		},
 		// 编辑
 		submitForm: function () {
-		debugger;
 			this.$refs.dataForm.validate((valid) => {
 				if (valid) {
 					this.$confirm('确认提交吗？', '提示', {}).then(() => {
@@ -235,10 +247,6 @@ export default {
         this.dataForm.deptId = data.id
         this.dataForm.deptName = data.name
 		},
-		// 时间格式化
-  	dateFormat: function (row, column, cellValue, index){
-    return format(row[column.property])
-  },
 		// 处理表格列过滤显示
   displayFilterColumnsDialog: function () {
 			this.$refs.tableColumnFilterDialog.setDialogVisible(true)
@@ -258,14 +266,34 @@ export default {
 				{prop:"roleNames", label:"角色", minWidth:100},
 				{prop:"email", label:"邮箱", minWidth:120},
 				{prop:"mobile", label:"手机", minWidth:100},
-				{prop:"status", label:"状态", minWidth:70},
+				{prop:"status", label:"状态", minWidth:70, formatter:this.statusFormat},
+				{prop:"lastLoginTime", label:"最后一次登录时间", minWidth:120, formatter:this.dateFormat},
+				{prop:"loginErrorTimes", label:"连续登录错误次数", minWidth:70},
 				// {prop:"createBy", label:"创建人", minWidth:120},
-				// {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
+				 {prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
 				// {prop:"lastUpdateBy", label:"更新人", minWidth:100},
 				// {prop:"lastUpdateTime", label:"更新时间", minWidth:120, formatter:this.dateFormat}
 			]
-			this.filterColumns = JSON.parse(JSON.stringify(this.columns));
-      	}
+  	},
+    // 时间格式化
+  	dateFormat: function (row, column, cellValue, index){
+    return format(row[column.property])
+  },
+   statusFormat: function(row, column, cellValue, index){
+      let status = row[column.property];
+      if (status == '0') {
+        return "禁用";
+      }
+      if (status == '1') {
+        return "正常";
+      }
+      if (status == '2') {
+        return "锁定";
+      }
+      if (status == '3') {
+        return "注销";
+      }
+   }
 	},
 	mounted() {
 		this.findDeptTree()

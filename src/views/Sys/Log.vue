@@ -12,7 +12,7 @@
 		</el-form>
 	</div>
 	<!--表格内容栏-->
-	<kt-table :height="350" 
+	<kt-table :height="350"
     :data="pageResult" :columns="columns" :showOperation="showOperation" @findPage="findPage">
 	</kt-table>
   </div>
@@ -63,9 +63,9 @@ export default {
 			}).then(data!=null?data.callback:'')
 		},
 		// 时间格式化
-      	dateFormat: function (row, column, cellValue, index){
-          	return format(row[column.property])
-      	}
+  dateFormat: function (row, column, cellValue, index){
+    return format(row[column.property])
+  	}
 	},
 	mounted() {
 	}

@@ -1,6 +1,6 @@
 import axios from '../axios'
 
-/* 
+/*
  * 用户管理模块
  */
 
@@ -35,4 +35,12 @@ export const findPermissions = (params) => {
         method: 'get',
         params
     })
+}
+// 解锁
+export const batUnlock = (params) => {
+  return axios({
+    url: '/user/unlock',
+    method: 'get',
+    params
+  })
 }

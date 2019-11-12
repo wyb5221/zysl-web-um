@@ -16,7 +16,7 @@
 	</div>
 	<!--表格内容栏-->
 	<kt-table :height="350" permsEdit="sys:dict:edit" permsDelete="sys:dict:delete"
-		:data="pageResult" :columns="columns" 
+		:data="pageResult" :columns="columns"
 		@findPage="findPage" @handleEdit="handleEdit" @handleDelete="handleDelete">
 	</kt-table>
 	<!--新增编辑界面-->
@@ -161,9 +161,9 @@ export default {
 			})
 		},
 		// 时间格式化
-      	dateFormat: function (row, column, cellValue, index){
-          	return format(row[column.property])
-      	}
+  dateFormat: function (row, column, cellValue, index){
+    return format(row[column.property])
+  	}
 	},
 	mounted() {
 	}
