@@ -37,10 +37,10 @@ export const findPermissions = (params) => {
     })
 }
 // 解锁
-export const batunlock = (data) => {
+export const batUnlock = (params) => {
   return axios({
     url: '/user/unlock',
     method: 'get',
-    data
+    params
   })
 }

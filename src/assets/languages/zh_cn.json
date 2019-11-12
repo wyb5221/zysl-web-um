@@ -22,7 +22,8 @@
         "submit": "提交",
         "comfirm": "确定",
         "cancel": "取消",
-        "reset": "重置"
+        "reset": "重置",
+        "unlock":"解锁"
 
     },
     "sys": {
