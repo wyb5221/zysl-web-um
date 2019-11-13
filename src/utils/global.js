@@ -8,6 +8,5 @@
 export const baseUrl = 'http://192.168.200.87:8001'
 
 export default {
-    baseUrl,
-    backupBaseUrl
+    baseUrl
 }
