@@ -82,7 +82,7 @@
 				<el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
 					 style="width: 100%;">
 					<el-option v-for="item in roles" :key="item.id"
-						:label="item.remark" :value="item.id">
+						:label="item.name" :value="item.id">
 					</el-option>
 				</el-select>
 			</el-form-item>
@@ -135,8 +135,8 @@ export default {
 				password: '123456',
 				deptId: 1,
 				deptName: '',
-				email: 'test@qq.com',
-				mobile: '13889700023',
+				email: '',
+				mobile: '',
 				lastLoginTime: '',
 				loginErrorTimes: '',
 				status: 1,
@@ -188,8 +188,8 @@ export default {
 				password: '',
 				deptId: 1,
 				deptName: '',
-				email: 'test@qq.com',
-				mobile: '13889700023',
+				email: '',
+				mobile: '',
 				status: 1,
 				userRoles: []
 			}
