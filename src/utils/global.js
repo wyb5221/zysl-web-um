@@ -3,9 +3,8 @@
  * 通过原型挂载到Vue属性
  * 通过 this.Global 调用
  */
-
 // 后台管理系统服务器地址
-export const baseUrl = 'http://192.168.200.87:8001'
+export const baseUrl = window.apiurl
 
 export default {
     baseUrl
