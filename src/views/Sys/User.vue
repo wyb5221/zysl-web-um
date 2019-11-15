@@ -78,7 +78,7 @@
 				<el-input v-model="dataForm.loginErrorTimes" auto-complete="off"></el-input>
 			</el-form-item>
 			-->
-			<el-form-item label="角色" prop="userRoles" v-if="!operation">
+			<el-form-item label="角色" prop="userRoles" >
 				<el-select v-model="dataForm.userRoles" multiple placeholder="请选择"
 					 style="width: 100%;">
 					<el-option v-for="item in roles" :key="item.id"
