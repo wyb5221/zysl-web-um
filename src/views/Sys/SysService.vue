@@ -49,6 +49,9 @@
         <el-form-item label="微服务描述" prop="remark">
           <el-input v-model="dataForm.remark" auto-complete="off"></el-input>
         </el-form-item>
+        <el-form-item label="加密key" prop="secret">
+          <el-input v-model="dataForm.secret" auto-complete="off"></el-input>
+        </el-form-item>
         <el-form-item label="创建人" prop="createBy"  v-if="false">
           <el-input v-model="dataForm.createBy" auto-complete="off"></el-input>
         </el-form-item>
@@ -98,6 +101,7 @@
                     {prop:"gateCode", label:"网关编号", minWidth:100},
                     {prop:"developer", label:"开发负责人", minWidth:100},
                     {prop:"remark", label:"微服务描述", minWidth:100},
+                    {prop:"secret", label:"加密key", minWidth:100},
                 ],
                 pageRequest: { pageNum: 1, pageSize: 8 },
                 subSysPageRequest:{ pageNum: 1, pageSize: 999 },
@@ -121,6 +125,7 @@
                     gateCode: null,
                     developer: null,
                     remark: null,
+                    secret: null,
                     createBy: null,
                     createTime: null,
                     lastUpdateBy: null,
@@ -162,6 +167,7 @@
                     gateCode: '',
                     developer: '',
                     remark: '',
+                    secret:'',
                     createBy: '',
                     createTime: '',
                     lastUpdateBy: '',

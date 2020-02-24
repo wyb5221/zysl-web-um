@@ -29,6 +29,9 @@
 			<el-form-item label="角色名" prop="name">
 				<el-input v-model="dataForm.name" auto-complete="off"></el-input>
 			</el-form-item>
+			<el-form-item label="角色code" prop="code">
+        <el-input v-model="dataForm.code" auto-complete="off"></el-input>
+      </el-form-item>
 			<el-form-item label="备注 " prop="remark">
 				<el-input v-model="dataForm.remark" auto-complete="off" type="textarea"></el-input>
 			</el-form-item>
@@ -81,6 +84,7 @@ export default {
 			columns: [
 				{prop:"id", label:"ID", minWidth:50},
 				{prop:"name", label:"角色名", minWidth:120},
+				{prop:"code", label:"角色code", minWidth:120},
 				{prop:"remark", label:"备注", minWidth:120},
 				{prop:"createBy", label:"创建人", minWidth:120},
 				{prop:"createTime", label:"创建时间", minWidth:120, formatter:this.dateFormat}
