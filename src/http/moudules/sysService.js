@@ -28,3 +28,12 @@ export const findPage = (data) => {
         data
     })
 }
+
+// 生成jwt
+export const createJwt = (data) => {
+  return axios({
+    url: '/sysService/getJwt',
+    method: 'post',
+    data
+  })
+}

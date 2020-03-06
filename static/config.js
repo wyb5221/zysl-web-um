@@ -1,1 +1,1 @@
-window.apiurl = "http://192.168.200.87:8001"
+window.apiurl = "http://127.0.0.1:8001"
