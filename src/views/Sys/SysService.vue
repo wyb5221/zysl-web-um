@@ -90,7 +90,7 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button :size="size" @click.native="jwtDialogVisible = false">{{$t('action.cancel')}}</el-button>
-        <el-button :size="size" type="primary" @click.native="submitForm" :loading="editLoading">{{$t('action.submit')}}</el-button>
+        <el-button :size="size" type="primary" @click.native="submitFormJwt" :loading="editLoading">{{$t('action.submit')}}</el-button>
       </div>
     </el-dialog>
 
@@ -237,8 +237,31 @@
                 this.jwtDialogVisible = true
                 this.operation = false
                 this.dataForm = Object.assign({}, params.row)
+            },
+             // 编辑jwt
+            submitFormJwt: function () {
+                this.$refs.dataForm.validate((valid) => {
+                    if (valid) {
+                        this.$confirm('确认提交吗？', '提示', {}).then(() => {
+                            this.editLoading = true
+                            let params = Object.assign({}, this.dataForm)
+                            this.$api.sysService.createJwt(params).then((res) => {
+                                if(res.code == 200) {
+                                    this.$alert(res.msg);
 
+                                 //   this.$message({ dangerouslyUseHTMLString: true,
+                                   //               message: '操作成功:' + res.msg, type: 'error' })
+                                } else {
+                                    this.$message({message: '操作失败, ' + res.msg, type: 'error'})
+                                }
+                                this.editLoading = false
+                                this.$refs['dataForm'].resetFields()
+                                this.jwtDialogVisible = false
 
+                            })
+                        })
+                    }
+                })
             },
 
             // 时间格式化

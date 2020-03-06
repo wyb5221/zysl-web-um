@@ -14,7 +14,7 @@
         <template slot-scope="scope">
           <kt-button icon="fa fa-edit" :label="$t('action.edit')" :perms="permsEdit" :size="size" @click="handleEdit(scope.$index, scope.row)" />
           <kt-button icon="fa fa-trash" :label="$t('action.delete')" :perms="permsDelete" :size="size" type="danger" @click="handleDelete(scope.$index, scope.row)" />
-          <kt-button :label="$t('action.createJwt')" :perms="permsCreateJwt" :size="size" type="danger" @click="handleCreateJwt(scope.$index, scope.row)"/>
+          <kt-button :label="$t('action.createJwt')" :perms="permsEdit" :size="size" type="danger" @click="handleCreateJwt(scope.$index, scope.row)"/>
         </template>
       </el-table-column>
     </el-table>
@@ -41,7 +41,7 @@ export default {
     data: Object, // 表格分页数据
     permsEdit: String,  // 编辑权限标识
     permsDelete: String,  // 删除权限标识
-    permsCreateJwt: String, //生成jwt权限标识
+ //   permsCreateJwt: String, //生成jwt权限标识
     size: { // 尺寸样式
       type: String,
       default: 'mini'
