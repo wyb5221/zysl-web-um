@@ -82,10 +82,10 @@
           <el-input v-model="dataForm.id" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="角色列表" prop="remark">
-          <el-input v-model="dataForm.userRoles" auto-complete="off"></el-input>
+          <el-input v-model="dataForm.userRoles" placeholder="输入角色编号用,隔开；如：admin,test" auto-complete="off"></el-input>
         </el-form-item>
         <el-form-item label="有效期" prop="remark">
-          <el-input v-model="dataForm.validity" auto-complete="off"></el-input>
+          <el-input v-model="dataForm.validity" placeholder="日期格式yyyy-MM-dd，有效期到配置日期的0点0分0秒" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
