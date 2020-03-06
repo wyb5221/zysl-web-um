@@ -77,15 +77,15 @@
 
     <!--生成jwt界面-->
     <el-dialog :title="生成jwt" width="40%" :visible.sync="jwtDialogVisible" :close-on-click-modal="false">
-      <el-form :model="dataForm" label-width="100px" :rules="dataFormRules" ref="dataForm" :size="size">
+      <el-form :model="dataForm" label-width="100px" ref="dataForm" :size="size">
         <el-form-item label="id" prop="id"  v-if="dataForm.isPrimaryKey">
           <el-input v-model="dataForm.id" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="微服务描述" prop="remark">
-          <el-input v-model="dataForm.remark" auto-complete="off"></el-input>
+        <el-form-item label="角色列表" prop="remark">
+          <el-input v-model="dataForm.userRoles" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="微服务描述" prop="remark">
-          <el-input v-model="dataForm.remark" auto-complete="off"></el-input>
+        <el-form-item label="有效期" prop="remark">
+          <el-input v-model="dataForm.validity" auto-complete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -130,6 +130,7 @@
 
                 operation: false, // true:新增, false:编辑
                 editDialogVisible: false, // 新增编辑界面是否显示
+                jwtDialogVisible: false,
                 editLoading: false,
                 dataFormRules: {
                     label: [
