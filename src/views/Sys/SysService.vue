@@ -41,8 +41,8 @@
         <el-form-item label="微服务名称" prop="name">
           <el-input v-model="dataForm.name" auto-complete="off"></el-input>
         </el-form-item>
-        <el-form-item label="网关编号" prop="gateCode">
-          <el-input v-model="dataForm.gateCode" auto-complete="off" placeholder="网关编号，比如/gate/01,则编号为01"></el-input>
+        <el-form-item label="网关路由" prop="gateCode">
+          <el-input v-model="dataForm.gateCode" auto-complete="off" placeholder="网关路由，比如/gate/01"></el-input>
         </el-form-item>
         <el-form-item label="开发负责人" prop="developer">
           <el-input v-model="dataForm.developer" auto-complete="off"></el-input>
@@ -119,7 +119,7 @@
                     /*{prop:"sysKey", label:"系统表主键", minWidth:100},*/
                     {prop:"code", label:"微服务编号", minWidth:100},
                     {prop:"name", label:"微服务名称", minWidth:100},
-                    {prop:"gateCode", label:"网关编号", minWidth:100},
+                    {prop:"gateCode", label:"网关路由", minWidth:100},
                     {prop:"developer", label:"开发负责人", minWidth:100},
                     {prop:"remark", label:"微服务描述", minWidth:100},
                     {prop:"secret", label:"加密key", minWidth:100},
